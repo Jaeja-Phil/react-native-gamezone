@@ -1,8 +1,18 @@
 import React, { useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, Modal, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  Modal,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from 'react-native';
 import { globalStyles } from '../styles/Global';
 import { MaterialIcons } from '@expo/vector-icons';
 
+import ReviewForm from './ReviewForm';
 import Card from '../shared/Card';
 
 export default function Home({ navigation }) {
@@ -13,18 +23,29 @@ export default function Home({ navigation }) {
     { title: 'Not So "Final" Fantasy', rating: 3, body: 'lorem ipsum', key: '3' },
   ]);
 
+  const addReview = (review) => {
+    review.key = Math.random().toString();
+    setReviews((prevState) => {
+      return [review, ...prevState];
+    });
+    setModalOpen(false);
+  };
+
   return (
     <View style={globalStyles.container}>
       <Modal visible={modalOpen}>
-        <View>
-          <Text>Hello modal</Text>
-          <MaterialIcons
-            name='close'
-            size={150}
-            onPress={() => setModalOpen(!modalOpen)}
-            style={{ ...styles.modalToggle, ...styles.modalClose }}
-          />
-        </View>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={styles.modalContent}>
+            <Text>Hello modal</Text>
+            <MaterialIcons
+              name='close'
+              size={150}
+              onPress={() => setModalOpen(!modalOpen)}
+              style={{ ...styles.modalToggle, ...styles.modalClose }}
+            />
+            <ReviewForm addReview={addReview} />
+          </View>
+        </TouchableWithoutFeedback>
       </Modal>
 
       <MaterialIcons
@@ -60,5 +81,8 @@ const styles = StyleSheet.create({
   modalClose: {
     marginTop: 100,
     marginBottom: 0,
+  },
+  modalContent: {
+    flex: 1,
   },
 });
