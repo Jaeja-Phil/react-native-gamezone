@@ -26,3 +26,5 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
 });
+
+console.log('testing commit record');
